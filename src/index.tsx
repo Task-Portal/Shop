@@ -11,6 +11,7 @@ import {
   ApolloProvider,
   gql,
 } from "@apollo/client";
+import { cache } from "./apollo/cache";
 
 export const typeDefs = gql`
   extend type Query {
@@ -20,7 +21,7 @@ export const typeDefs = gql`
 
 export const client = new ApolloClient({
   uri: "http://localhost:4000",
-  cache: new InMemoryCache(),
+  cache: cache,
   typeDefs,
 });
 

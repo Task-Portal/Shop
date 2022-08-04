@@ -1,9 +1,7 @@
 import React, { RefObject } from "react";
-
-import { GET_CURRENCIES } from "../../queries";
-import downArrow from "../images/down-arrow.png";
-
+import { GET_CURRENCIES } from "../../apollo/queries";
 import { ICurrency } from "../../interfaces/currency";
+import { setLocals } from "../../apollo/setLocals";
 
 interface CurrencyProp {
   currencyType: string;
@@ -16,13 +14,13 @@ interface IState {
 }
 
 class Currency extends React.Component<CurrencyProp, IState> {
-  // {this.props.currencyType}
   buttonRef: RefObject<any>;
   constructor(props) {
     super(props);
 
     this.buttonRef = React.createRef();
-    this.handleClickOutside = this.handleClickOutside.bind(this);
+    this.onClickOutside = this.onClickOutside.bind(this);
+    this.onSelectCurrency = this.onSelectCurrency.bind(this);
     this.state = {
       selectedCurrency: "",
       currencies: [] as ICurrency[],
@@ -30,14 +28,23 @@ class Currency extends React.Component<CurrencyProp, IState> {
     };
   }
 
-  handleClickOutside(event) {
+  onClickOutside(event) {
     if (this.buttonRef && !this.buttonRef.current.contains(event.target)) {
       this.setState({ isSelectOpen: false });
     }
   }
 
+  onSelectCurrency(currency: string) {
+    this.setState({
+      selectedCurrency: currency,
+      isSelectOpen: false,
+    });
+
+    setLocals("selectedCurrency", currency);
+  }
+
   componentDidMount() {
-    document.addEventListener("mousedown", this.handleClickOutside);
+    document.addEventListener("mousedown", this.onClickOutside);
 
     GET_CURRENCIES().then((r) => {
       if (r?.data?.currencies) {
@@ -51,7 +58,7 @@ class Currency extends React.Component<CurrencyProp, IState> {
   }
 
   componentWillUnmount() {
-    document.removeEventListener("mousedown", this.handleClickOutside);
+    document.removeEventListener("mousedown", this.onClickOutside);
   }
 
   render() {
@@ -79,12 +86,7 @@ class Currency extends React.Component<CurrencyProp, IState> {
               {this.state.currencies.map((c) => (
                 <li
                   key={c.symbol}
-                  onClick={() => {
-                    this.setState({
-                      selectedCurrency: c.symbol,
-                      isSelectOpen: false,
-                    });
-                  }}
+                  onClick={() => this.onSelectCurrency(c.symbol)}
                 >
                   {c.symbol + " " + c.label}
                 </li>
