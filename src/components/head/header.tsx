@@ -11,7 +11,7 @@ class Header extends React.Component {
         <MenuContainer />
         <img src={brand} alt={brand} className="brandLogo" />
         <div className="currencyCartContainer">
-          <Currency currencyType="dollars" />
+          <Currency />
           <Cart />
         </div>
       </div>

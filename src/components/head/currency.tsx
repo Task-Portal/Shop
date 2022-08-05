@@ -3,19 +3,15 @@ import { GET_CURRENCIES } from "../../apollo/queries";
 import { ICurrency } from "../../interfaces/currency";
 import { setLocals } from "../../apollo/setLocals";
 
-interface CurrencyProp {
-  currencyType: string;
-}
-
 interface IState {
   selectedCurrency: string;
   currencies: ICurrency[];
   isSelectOpen: boolean;
 }
 
-class Currency extends React.Component<CurrencyProp, IState> {
+class Currency extends React.Component<{}, IState> {
   buttonRef: RefObject<any>;
-  constructor(props) {
+  constructor(props = {}) {
     super(props);
 
     this.buttonRef = React.createRef();
@@ -53,7 +49,6 @@ class Currency extends React.Component<CurrencyProp, IState> {
           selectedCurrency: r.data.currencies[0].symbol,
         });
       }
-      console.log("Result: ", r.data.currencies);
     });
   }
 
@@ -65,7 +60,7 @@ class Currency extends React.Component<CurrencyProp, IState> {
     return (
       <div ref={this.buttonRef}>
         <div className="wrapper">
-          <div className="container">
+          <div>
             <button
               type="button"
               onClick={() =>

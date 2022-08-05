@@ -21,6 +21,55 @@ export const GET_CURRENCIES = () => {
     });
 };
 
+export const GET_CATEGORIES = () => {
+  return client
+    .query({
+      query: gql`
+        query GetCategories {
+          categories {
+            name
+          }
+        }
+      `,
+    })
+    .then((result) => {
+      return result;
+    });
+};
+
+export const GET_ITEMS = (categoryName: string) => {
+  // let b = {
+  //   input: {
+  //     title: categoryName,
+  //   },
+  // };
+
+  return client
+    .query({
+      query: gql`
+        query GetItems($input: String!) {
+          category(input: { title: $input }) {
+            products {
+              name
+              inStock
+              gallery
+              prices {
+                currency {
+                  symbol
+                }
+                amount
+              }
+            }
+          }
+        }
+      `,
+      variables: { input: categoryName },
+    })
+    .then((result) => {
+      return result;
+    });
+};
+
 //
 // export const GET_SELECTED_CURRENCY = () => {
 //   return client

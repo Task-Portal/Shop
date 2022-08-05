@@ -2,6 +2,7 @@
   "name": "shop",
   "version": "0.1.0",
   "private": true,
+  "homepage": "http://localhost:3000/all",
   "dependencies": {
     "@apollo/client": "^3.6.9",
     "@apollo/react-hoc": "^4.0.0",

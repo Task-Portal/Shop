@@ -1,13 +1,26 @@
 import React from "react";
 import NavTab from "./navTab";
+import { GET_CATEGORIES } from "../../apollo/queries";
 
 class MenuContainer extends React.Component {
+  state = {
+    categories: [],
+  };
+  componentDidMount() {
+    GET_CATEGORIES().then((r) => {
+      this.setState({ categories: r.data.categories });
+      console.log(r.data.categories);
+    });
+  }
+
   render() {
     return (
       <div className="menu_container">
-        <NavTab value="WOMEN" />
-        <NavTab value="MEN" />
-        <NavTab value="KIDS" />
+        {/*<NavTab value="WOMEN" />*/}
+
+        {this.state.categories.map((r: { name: string }) => {
+          return <NavTab key={r.name} value={r.name.toUpperCase()} />;
+        })}
       </div>
     );
   }

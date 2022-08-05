@@ -1,4 +1,4 @@
-@import "variables";
+@import "../globals/variables";
 
 .menu_container{
   display: flex;
@@ -28,7 +28,7 @@
 .currencyCartContainer{
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: start;
   background: salmon;
   float: right;
   margin-right: 20px;
