@@ -1,4 +1,4 @@
 export interface ICurrency {
-  label: string;
+  label?: string;
   symbol: string;
 }

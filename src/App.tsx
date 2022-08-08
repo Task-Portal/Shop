@@ -18,26 +18,28 @@ class App extends React.Component<{}, IState> {
   };
   componentDidMount() {
     GET_CURRENCIES().then((r) => console.log("App, currencies: ", r));
+    GET_CATEGORIES().then((r) => {
+      this.setState({ categories: r.data.categories });
+    });
   }
 
   render() {
     return (
       <div>
         <Header />
-        <div>
-          <Routes>
-            {this.state.categories.map((r: { name: string }) => {
-              return (
-                <Route
-                  key={r.name}
-                  path={`/${r.name}`}
-                  element={<Nav value={`${r.name}`} />}
-                />
-              );
-            })}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </div>
+        <Routes>
+          {this.state.categories.map((r: { name: string }) => {
+            return (
+              <Route
+                key={r.name}
+                path={`/${r.name}`}
+                element={<Nav value={`${r.name}`} />}
+              />
+            );
+          })}
+
+          <Route path="*" element={<NotFound />} />
+        </Routes>
       </div>
     );
   }

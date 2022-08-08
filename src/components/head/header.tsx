@@ -7,14 +7,16 @@ import Cart from "./cart";
 class Header extends React.Component {
   render() {
     return (
-      <div className="header">
-        <MenuContainer />
-        <img src={brand} alt={brand} className="brandLogo" />
-        <div className="currencyCartContainer">
-          <Currency />
-          <Cart />
+      <>
+        <div className="header">
+          <MenuContainer />
+          <img src={brand} alt={brand} className="brandLogo" />
+          <div className="currencyCartContainer">
+            <Currency />
+            <Cart />
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 }
