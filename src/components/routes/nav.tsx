@@ -4,10 +4,7 @@ import { GET_ITEMS } from "../../apollo/queries";
 import { IProduct } from "../../interfaces/product";
 import { addedItemsVar, selectedCurrencyVar } from "../../apollo/cache";
 import circleCartBtn from "../images/circleIcon.png";
-import { setLocals } from "../../apollo/setLocals";
 import { withHooksHOC } from "../../functions/withHooksHOC";
-import { apolloVar } from "../../apollo/apolloVaribles";
-import { client } from "../../index";
 
 interface NavProp {
   value: string;

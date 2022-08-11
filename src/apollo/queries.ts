@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 import { client } from "../index";
-import { setLocals } from "./setLocals";
+import { selectedCurrencyVar } from "./cache";
 
 export const GET_CURRENCIES = () => {
   return client
@@ -16,7 +16,8 @@ export const GET_CURRENCIES = () => {
     })
     .then((result) => {
       if (result.data.currencies[0].symbol)
-        setLocals("selectedCurrency", result.data.currencies[0].symbol);
+        // setLocals("selectedCurrency", result.data.currencies[0].symbol);
+        selectedCurrencyVar(result.data.currencies[0].symbol);
       return result;
     });
 };

@@ -1,8 +1,7 @@
 import React, { RefObject } from "react";
 import { GET_CURRENCIES } from "../../apollo/queries";
 import { ICurrency } from "../../interfaces/currency";
-import { setLocals } from "../../apollo/setLocals";
-import { apolloVar } from "../../apollo/apolloVaribles";
+import { selectedCurrencyVar } from "../../apollo/cache";
 
 interface IState {
   selectedCurrency: string;
@@ -37,7 +36,8 @@ class Currency extends React.Component<{}, IState> {
       isSelectOpen: false,
     });
 
-    setLocals(apolloVar.selectedCurrency, currency);
+    // setLocals(apolloVar.selectedCurrency, currency);
+    selectedCurrencyVar(currency);
   }
 
   componentDidMount() {
