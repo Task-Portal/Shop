@@ -1,6 +1,8 @@
 import { InMemoryCache, makeVar } from "@apollo/client";
+import { IOrderedProducts } from "../interfaces/orderedProducts";
 
 export const selectedCurrencyVar = makeVar<string>("");
+export const addedItemsVar = makeVar<IOrderedProducts>([]);
 
 export const cache: InMemoryCache = new InMemoryCache({
   typePolicies: {
@@ -10,6 +12,14 @@ export const cache: InMemoryCache = new InMemoryCache({
           read() {
             return selectedCurrencyVar();
           },
+        },
+        addedItems: {
+          read() {
+            return addedItemsVar();
+          },
+          // merge(existing = [], incoming: any) {
+          //   return [...existing, ...incoming];
+          // },
         },
       },
     },

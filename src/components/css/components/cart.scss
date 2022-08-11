@@ -1,0 +1,17 @@
+@import "../globals/variables";
+
+.shop-cart{
+  position: relative;
+}
+
+
+.circle{
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  color: white;
+  background: $black;
+  border-radius: 50%;
+  right:7px;
+  top:-3px;
+}

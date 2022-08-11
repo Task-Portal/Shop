@@ -38,18 +38,13 @@ export const GET_CATEGORIES = () => {
 };
 
 export const GET_ITEMS = (categoryName: string) => {
-  // let b = {
-  //   input: {
-  //     title: categoryName,
-  //   },
-  // };
-
   return client
     .query({
       query: gql`
         query GetItems($input: String!) {
           category(input: { title: $input }) {
             products {
+              id
               name
               inStock
               gallery
@@ -70,13 +65,12 @@ export const GET_ITEMS = (categoryName: string) => {
     });
 };
 
-//
-// export const GET_SELECTED_CURRENCY = () => {
+// export const GET_ADDED_ITEMS = () => {
 //   return client
 //     .query({
 //       query: gql`
-//         query GetSelectedCurrency {
-//           selectedCurrency @client
+//         query GetAddedItems {
+//           addedItems @client
 //         }
 //       `,
 //     })
