@@ -15,3 +15,156 @@
   right:7px;
   top:-3px;
 }
+
+.cart-container{
+
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: 26px auto 43px 19px;
+  grid-template-areas:
+          'title'
+          'items'
+          'total'
+          'buttons';
+
+  justify-content: center;
+  align-items: center;
+  padding: 20px 16px;
+  grid-gap: 20px;
+
+  z-index: 50;
+  position: absolute;
+  top: 81px;
+  right: 72px;
+
+  background: white;
+
+  .title{
+    grid-area: title;
+    font-weight: 500;
+    font-size: 16px;
+  }
+
+  .total{
+    grid-area: total;
+  }
+
+  .buttons{
+    grid-area: buttons;
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+.overlay{
+  position: fixed;
+  top: 81px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(57, 55, 72, 0.22);
+  z-index: 1;
+}
+
+
+ .items{
+  grid-area: items;
+  display: grid;
+  grid-template-columns: auto;
+  grid-auto-flow: row;
+  grid-gap: 32px;
+
+//scroll
+   max-height: 500px;
+   height: 100%;
+   overflow: auto;
+   text-align:justify;
+}
+
+
+ .item-box{
+   padding: 1px;
+  display: grid;
+  grid-gap: 5px;
+  grid-template-columns: 136px 24px 121px;
+  grid-template-rows: repeat(7,26px);
+   grid-auto-flow: row;
+
+  grid-template-areas:
+    'brand         plus     photo'
+    'itemName       .       photo'
+    'price          .       photo'
+    'attributeName quantity photo'
+    'attributeParams .      photo'
+    'secondAtrName   .      photo'
+    'secAttrParams minus    photo';
+;
+   & [class^='grid-item'] {
+     display: grid;
+     align-items: center;
+     justify-content: start;
+     outline: 1px dashed #f90;
+     //font-size: 30px;
+     color: $black;
+   }
+
+   & .grid-item1{
+     grid-area: brand;
+     font-size: 16px;
+     font-weight: 300;
+
+   }
+
+   & .grid-item2{
+     grid-area: plus;
+     justify-content: center;
+     align-content: center;
+     border: 1px solid black;
+     font-size: 25px;
+   }
+
+   & .grid-item3{
+     grid-area: photo;
+
+     .cart-image{
+       max-width: 121px;
+       width: 100%;
+       max-height: 190px;
+       height: 100%;
+     }
+   }
+   & .grid-item4{
+     grid-area: itemName;
+   }
+   & .grid-item5{
+     grid-area: price;
+     font-weight: 500;
+   }
+   & .grid-item6{
+     grid-area: attributeName;
+   }
+   & .grid-item7{
+     grid-area: quantity;
+   }
+    & .grid-item8{
+     grid-area: attributeParams;
+   }
+   & .grid-item9{
+     grid-area: secondAtrName;
+   }
+   & .grid-item10{
+     grid-area: secAttrParams;
+   }
+   & .grid-item11{
+     grid-area: minus;
+     justify-content: center;
+     align-content: center;
+     border: 1px solid black;
+   }
+
+
+}
+
+
+
+

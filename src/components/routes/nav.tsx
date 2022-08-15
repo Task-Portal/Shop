@@ -4,7 +4,7 @@ import { GET_ITEMS } from "../../apollo/queries";
 import { IProduct } from "../../interfaces/product";
 import { addedItemsVar, selectedCurrencyVar } from "../../apollo/cache";
 import circleCartBtn from "../images/circleIcon.png";
-import { withHooksHOC } from "../../functions/withHooksHOC";
+import { withApolloHooksHOC } from "../../functions/withApolloHooksHOC";
 
 interface NavProp {
   value: string;
@@ -17,8 +17,7 @@ interface IState {
 }
 
 class Nav extends React.Component<NavProp, IState> {
-  // this.props.value
-
+  //region ctor
   constructor(props) {
     super(props);
 
@@ -31,6 +30,7 @@ class Nav extends React.Component<NavProp, IState> {
     };
     //endregion
   }
+  //endregion
 
   //region CDM
   componentDidMount() {
@@ -53,6 +53,7 @@ class Nav extends React.Component<NavProp, IState> {
   }
   //endregion
 
+  //region onAdd
   onAdd(value: string) {
     let flag = true;
     let orderedProducts = [...addedItemsVar()];
@@ -69,13 +70,16 @@ class Nav extends React.Component<NavProp, IState> {
     }
     addedItemsVar(orderedProducts);
   }
+  //endregion
 
+  //region getItems()
   getItems() {
     GET_ITEMS(this.props.value).then((r) => {
       console.log(r.data.category.products);
       this.setState({ items: r.data.category.products });
     });
   }
+  //endregion
 
   render() {
     return (
@@ -118,7 +122,7 @@ class Nav extends React.Component<NavProp, IState> {
                     {
                       i.prices.filter(
                         (p) => p.currency.symbol === this.state.currency
-                      )[0].amount
+                      )[0]?.amount
                     }
                   </div>
                 </div>
@@ -131,4 +135,5 @@ class Nav extends React.Component<NavProp, IState> {
   }
 }
 
-export default withHooksHOC(Nav, selectedCurrencyVar, "currency");
+// export default withApolloHooksHOC(Nav, selectedCurrencyVar, "currency");
+export default withApolloHooksHOC(Nav, [selectedCurrencyVar], ["currency"]);

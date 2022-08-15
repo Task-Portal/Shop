@@ -16,8 +16,10 @@ class MenuContainer extends React.Component {
   render() {
     return (
       <div className="menu_container">
-        {this.state.categories.map((r: { name: string }) => {
-          return <NavTab key={r.name} value={r.name.toUpperCase()} />;
+        {this.state.categories.map((r: { name: string }, index) => {
+          return (
+            <NavTab key={r.name} value={r.name.toUpperCase()} index={index} />
+          );
         })}
       </div>
     );

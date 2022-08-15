@@ -15,7 +15,7 @@
 
 .navTab {
 
-  color: black;
+  color: $black;
   cursor: pointer;
 }
 
@@ -31,7 +31,7 @@
   justify-content: start;
 
   float: right;
-  margin-right: 20px;
+  margin-right: 80px;
 }
 
 .currencySelect{
