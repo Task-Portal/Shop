@@ -5,6 +5,7 @@ import { addedItemsVar, selectedCurrencyVar } from "../../apollo/cache";
 import { IOrderedProducts } from "../../interfaces/orderedProducts";
 import { GET_PRODUCT } from "../../apollo/queries";
 import { IProduct } from "../../interfaces/product";
+import Attribute from "../body/Attribute";
 
 interface CartProp {
   orderedProducts: IOrderedProducts;
@@ -74,23 +75,36 @@ class Cart extends React.Component<CartProp, CartState> {
           <>
             <div className="overlay"></div>
             <div className="cart-container">
+              {/*region Title My Bag*/}
+
               <div className="title">
                 <b>My Bag</b> , {this.calculateOrderedItems()} items
               </div>
+              {/*endregion*/}
 
+              {/*region Items*/}
               <div className="items">
                 {this.state.productsFromDB.map((p: IProduct) => {
                   return (
                     <div className="item-box" key={p.id}>
+                      {/*region Brand*/}
                       <div className="grid-item1">{p.brand}</div>
-                      <div className="grid-item2">+</div>
-                      <div className="grid-item3">
-                        <img
-                          className="cart-image"
-                          src={p.gallery[0]}
-                          alt="photo"
-                        />
+                      {/*endregion*/}
+                      {/*region Buttons Plus Minus Quantity*/}
+                      <div className="grid-item2">
+                        <button className="sign">+</button>
+                        <div>2</div>
+                        <button className="sign">-</button>
                       </div>
+                      {/*endregion*/}
+
+                      {/*region Image Name*/}
+                      <div className="grid-item3">
+                        <img className="cart-image" src={p.gallery[0]} alt="" />
+                      </div>
+                      {/*endregion */}
+
+                      {/*region Name Currency*/}
                       <div className="grid-item4">{p.name}</div>
                       <div className="grid-item5">
                         {this.props.currencySymbol}
@@ -101,23 +115,30 @@ class Cart extends React.Component<CartProp, CartState> {
                           )[0]?.amount
                         }
                       </div>
-                      <div className="grid-item6">6</div>
-                      <div className="grid-item7">7</div>
-                      <div className="grid-item8">8</div>
-                      <div className="grid-item9">9</div>
-                      <div className="grid-item10">10</div>
-                      <div className="grid-item11">-</div>
+                      {/*endregion*/}
+
+                      {/*region Attributes*/}
+                      <div className="grid-item6">
+                        <Attribute
+                          attributes={p.attributes}
+                          key={`${p.id}atr`}
+                        />
+                      </div>
+                      {/*endregion  */}
                     </div>
                   );
                 })}
               </div>
-
+              {/*endregion*/}
+              {/*region Total*/}
               <div className="total">Total</div>
-
+              {/*endregion*/}
+              {/*region Buttons*/}
               <div className="buttons">
                 <button>VIEW BAG</button>
                 <button>CHECK OUT</button>
               </div>
+              {/*endregion*/}
             </div>
           </>
         )}
