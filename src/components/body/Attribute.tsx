@@ -21,15 +21,12 @@ class Attribute extends React.Component<AttributeProp> {
                     if (a.name === "Color") {
                       return (
                         <div
-                          key={i.id}
-                          className="attribute-value"
+                          key={i.value}
+                          className="color-box"
                           style={{
                             backgroundColor: `${i.value}`,
-                            width: "16px",
                           }}
-                        >
-                          {/*<div></div>*/}
-                        </div>
+                        />
                       );
                     }
                     return (

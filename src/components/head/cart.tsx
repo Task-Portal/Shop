@@ -20,7 +20,7 @@ interface CartState {
 class Cart extends React.Component<CartProp, CartState> {
   state = {
     isOpen: false,
-    productsFromDB: [],
+    productsFromDB: [] as IProduct[],
   };
 
   //region CDU
@@ -29,9 +29,7 @@ class Cart extends React.Component<CartProp, CartState> {
     prevState: Readonly<CartState>,
     snapshot?: any
   ) {
-    if (
-      prevProps.orderedProducts.length !== this.props.orderedProducts.length
-    ) {
+    if (prevProps.orderedProducts.length < this.props.orderedProducts.length) {
       this.getItems();
     }
   }
@@ -40,14 +38,12 @@ class Cart extends React.Component<CartProp, CartState> {
   //region getItems()
   getItems() {
     GET_PRODUCT(
-      this.props.orderedProducts[this.props.orderedProducts.length - 1].id
+      this.props.orderedProducts[this.props.orderedProducts.length - 1]?.id
     ).then((p) => {
       let arr = [...this.state.productsFromDB];
       // @ts-ignore
       arr.push(p.data.product);
       this.setState({ productsFromDB: arr });
-      console.log("state: ", this.state);
-      console.log("Product: ", p);
     });
   }
   //endregion
@@ -57,6 +53,46 @@ class Cart extends React.Component<CartProp, CartState> {
     return this.props.orderedProducts?.reduce((accumulator, val) => {
       return accumulator + val.quantity;
     }, 0);
+  }
+  //endregion
+
+  //region getItemQuantity
+  getItemQuantity(id: string) {
+    return this.props?.orderedProducts?.filter((p) => p.id === id)[0]?.quantity;
+  }
+  //endregion
+
+  //region onClick
+  onClick(sign: string, id: string) {
+    let items = addedItemsVar();
+    let newArr = [] as IOrderedProducts;
+    items.forEach((p) => {
+      if (p.id === id) {
+        sign === "+" ? p.quantity++ : p.quantity--;
+      }
+      if (p.quantity !== 0) {
+        newArr.push(p);
+      } else {
+        let products = this.state.productsFromDB.filter((i) => i.id !== p.id);
+        this.setState({ productsFromDB: products });
+      }
+    });
+
+    addedItemsVar(newArr);
+  }
+  //endregion
+
+  //region getTotal
+  getTotal() {
+    let symbol = this.props.currencySymbol;
+    let price = this.state.productsFromDB.reduce((accumulator, p) => {
+      return (
+        accumulator +
+        +p.prices.filter((p) => p.currency.symbol === symbol)[0].amount *
+          this.getItemQuantity(p.id)
+      );
+    }, 0);
+    return `${symbol}${price}`;
   }
   //endregion
 
@@ -76,12 +112,10 @@ class Cart extends React.Component<CartProp, CartState> {
             <div className="overlay"></div>
             <div className="cart-container">
               {/*region Title My Bag*/}
-
               <div className="title">
                 <b>My Bag</b> , {this.calculateOrderedItems()} items
               </div>
               {/*endregion*/}
-
               {/*region Items*/}
               <div className="items">
                 {this.state.productsFromDB.map((p: IProduct) => {
@@ -92,9 +126,19 @@ class Cart extends React.Component<CartProp, CartState> {
                       {/*endregion*/}
                       {/*region Buttons Plus Minus Quantity*/}
                       <div className="grid-item2">
-                        <button className="sign">+</button>
-                        <div>2</div>
-                        <button className="sign">-</button>
+                        <button
+                          className="sign"
+                          onClick={() => this.onClick("+", p.id)}
+                        >
+                          +
+                        </button>
+                        <div>{this.getItemQuantity(p.id)}</div>
+                        <button
+                          className="sign"
+                          onClick={() => this.onClick("-", p.id)}
+                        >
+                          -
+                        </button>
                       </div>
                       {/*endregion*/}
 
@@ -131,7 +175,10 @@ class Cart extends React.Component<CartProp, CartState> {
               </div>
               {/*endregion*/}
               {/*region Total*/}
-              <div className="total">Total</div>
+              <div className="total">
+                <div>Total</div>
+                <div>{this.getTotal()}</div>
+              </div>
               {/*endregion*/}
               {/*region Buttons*/}
               <div className="buttons">
@@ -148,7 +195,6 @@ class Cart extends React.Component<CartProp, CartState> {
   //endregion
 }
 
-// export default withApolloHooksHOC(Cart, addedItemsVar, "orderedProducts");
 export default withApolloHooksHOC(
   Cart,
   [addedItemsVar, selectedCurrencyVar],

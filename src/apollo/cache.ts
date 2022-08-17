@@ -17,9 +17,6 @@ export const cache: InMemoryCache = new InMemoryCache({
           read() {
             return addedItemsVar();
           },
-          // merge(existing = [], incoming: any) {
-          //   return [...existing, ...incoming];
-          // },
         },
       },
     },
