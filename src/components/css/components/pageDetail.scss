@@ -1,0 +1,133 @@
+@import "../globals/mixins";
+@import "../globals/variables";
+
+.pageDetailContainer{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: start;
+  align-items: flex-start;
+  box-sizing: border-box;
+  margin: 160px 219px 178px 100px ;
+  background: beige;
+
+
+
+
+  .collectionPhotos{
+    margin-right: 30px;
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+   //Scroll
+    @include maxWidHeight(90px,500px,100%,100%);
+    overflow: auto;
+
+
+    .miniPhoto{
+      max-width: 85px;
+      width: 100%;
+      margin-bottom: 30px;
+    }
+
+  }
+
+  .mainPhoto{
+    width: 610px;
+    height: 511px;
+    margin-right: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .mainPhotoImg{
+      height: 100%;
+      max-width: 511px;
+    }
+  }
+
+  .info{
+    width: 292px;
+    height: 595px;
+    //background: #8D8F9A;
+    display: flex;
+    flex-direction: column;
+    font-style: normal;
+
+    .brand{
+      font-weight: 600;
+      font-size: 30px;
+      line-height: 27px;
+      margin-bottom: 16px;
+    }
+
+    .title{
+      font-weight: 400;
+      font-size: 30px;
+      line-height: 27px;
+      margin-bottom: 43px;
+    }
+
+    .attributes{
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 36px;
+
+
+    }
+
+    .priceTitle{
+      font-family: 'Roboto Condensed', sans-serif;
+      font-style: normal;
+      font-weight: 700;
+      font-size: 18px;
+      line-height: 18px;
+      margin-bottom: 10px;
+    }
+
+    .priceBody{
+      font-style: normal;
+      font-weight: 700;
+      font-size: 24px;
+      line-height: 18px;
+      margin-bottom: 20px;
+    }
+
+    .addBtn{
+      justify-content: center;
+      align-items: center;
+      width: 292px;
+      height: 52px;
+      background: $green;
+      color: $white;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 16px;
+      line-height: 120%;
+      margin-bottom: 30px;
+    }
+
+    .attributeItemContainer{
+      //display: flex;
+      //justify-content: flex-start;
+      //width: 235px;
+      //flex-flow: row wrap;
+      //max-width: 63px;
+      //max-height: 45px;
+
+    }
+
+    .attributeItemValue{
+      min-width: 63px;
+      min-height: 45px;
+      font-family: 'Source Sans Pro', sans-serif;
+      font-style: normal;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 18px;
+    }
+
+
+
+  }
+}

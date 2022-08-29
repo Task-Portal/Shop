@@ -1,4 +1,4 @@
 export const routes = {
-  Description: "/description/:id",
+  Description: (category, id = ":id") => `/${category}/${id}`,
   Cart: "/cart",
 };

@@ -1,11 +1,12 @@
 import React from "react";
 import cart from "../images/shoppingCart.png";
-import { withApolloHooksHOC } from "../../functions/withApolloHooksHOC";
 import { addedItemsVar, selectedCurrencyVar } from "../../apollo/cache";
 import { IOrderedProducts } from "../../interfaces/orderedProducts";
 import { GET_PRODUCT } from "../../apollo/queries";
 import { IProduct } from "../../interfaces/product";
 import Attribute from "../body/Attribute";
+import { withHooksHoc } from "../../functions/withHooksHoc";
+import { useReactiveVar } from "@apollo/client";
 
 interface CartProp {
   orderedProducts: IOrderedProducts;
@@ -62,8 +63,8 @@ class Cart extends React.Component<CartProp, CartState> {
   }
   //endregion
 
-  //region onClick
-  onClick(sign: string, id: string) {
+  //region onClickQuantity
+  onClickQuantity(sign: string, id: string) {
     let items = addedItemsVar();
     let newArr = [] as IOrderedProducts;
     items.forEach((p) => {
@@ -92,7 +93,7 @@ class Cart extends React.Component<CartProp, CartState> {
           this.getItemQuantity(p.id)
       );
     }, 0);
-    return `${symbol}${price}`;
+    return `${symbol}${price.toFixed(2)}`;
   }
   //endregion
 
@@ -109,7 +110,10 @@ class Cart extends React.Component<CartProp, CartState> {
 
         {this.state.isOpen && (
           <>
-            <div className="overlay"></div>
+            <div
+              className="overlay"
+              onClick={() => this.setState({ isOpen: false })}
+            />
             <div className="cart-container">
               {/*region Title My Bag*/}
               <div className="title">
@@ -128,14 +132,14 @@ class Cart extends React.Component<CartProp, CartState> {
                       <div className="grid-item2">
                         <button
                           className="sign"
-                          onClick={() => this.onClick("+", p.id)}
+                          onClick={() => this.onClickQuantity("+", p.id)}
                         >
                           +
                         </button>
                         <div>{this.getItemQuantity(p.id)}</div>
                         <button
                           className="sign"
-                          onClick={() => this.onClick("-", p.id)}
+                          onClick={() => this.onClickQuantity("-", p.id)}
                         >
                           -
                         </button>
@@ -164,8 +168,11 @@ class Cart extends React.Component<CartProp, CartState> {
                       {/*region Attributes*/}
                       <div className="grid-item6">
                         <Attribute
-                          attributes={p.attributes}
+                          styles={[]}
+                          product={p}
                           key={`${p.id}atr`}
+                          orderedProducts={this.props.orderedProducts}
+                          // addSelectedAttributesFun={undefined}
                         />
                       </div>
                       {/*endregion  */}
@@ -181,10 +188,23 @@ class Cart extends React.Component<CartProp, CartState> {
               </div>
               {/*endregion*/}
               {/*region Buttons*/}
-              <div className="buttons">
-                <button>VIEW BAG</button>
-                <button>CHECK OUT</button>
-              </div>
+              {this.state.productsFromDB.length > 0 && (
+                <div className="cart-buttons">
+                  <button
+                    className="buttons viewBag"
+                    onClick={() => console.log("View Bag")}
+                  >
+                    VIEW BAG
+                  </button>
+                  <button
+                    className="buttons checkOut"
+                    onClick={() => alert("Check out")}
+                  >
+                    CHECK OUT
+                  </button>
+                </div>
+              )}
+
               {/*endregion*/}
             </div>
           </>
@@ -195,8 +215,15 @@ class Cart extends React.Component<CartProp, CartState> {
   //endregion
 }
 
-export default withApolloHooksHOC(
-  Cart,
-  [addedItemsVar, selectedCurrencyVar],
-  ["orderedProducts", "currencySymbol"]
-);
+export default withHooksHoc(Cart, [
+  {
+    hook: useReactiveVar,
+    name: addedItemsVar,
+    propName: "orderedProducts",
+  },
+  {
+    hook: useReactiveVar,
+    name: selectedCurrencyVar,
+    propName: "currencySymbol",
+  },
+]);

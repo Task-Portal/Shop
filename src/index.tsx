@@ -10,6 +10,12 @@ export const client = new ApolloClient({
   uri: "http://localhost:4000",
   cache: cache,
   connectToDevTools: true,
+  // defaultOptions: {
+  //   query: {
+  //     fetchPolicy: "network-only",
+  //     errorPolicy: "all",
+  //   },
+  // },
 });
 
 const root = ReactDOM.createRoot(

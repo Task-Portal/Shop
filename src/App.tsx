@@ -6,7 +6,7 @@ import { Route, Routes } from "react-router-dom";
 import { GET_CATEGORIES, GET_CURRENCIES } from "./apollo/queries";
 import Nav from "./components/routes/nav";
 import { ICategories } from "./interfaces/categories";
-import ItemDescription from "./components/body/itemDescription";
+import PageDetail from "./components/body/pageDetail";
 import { routes } from "./components/routes/routes";
 
 interface IState {
@@ -39,7 +39,18 @@ class App extends React.Component<{}, IState> {
                 />
               );
             })}
-            <Route path={routes.Description} element={<ItemDescription />} />
+            {this.state.categories.map((r: { name: string }, index) => {
+              return (
+                <Route
+                  key={r.name}
+                  path={`/${routes.Description(r.name)}`}
+                  // path={`/${index === 0 ? "" : r.name}${routes.Description}`}
+                  element={<PageDetail />}
+                  // http://localhost:3000/clothes/description/huarache-x-stussy-le
+                />
+              );
+            })}
+            {/*<Route path={routes.Description()} element={<ItemDescription />} />*/}
           </Routes>
         </div>
       </div>

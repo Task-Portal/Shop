@@ -1,5 +1,5 @@
 export interface IItem {
   id?: string;
-  displayValue: string;
+  displayValue?: string;
   value: string;
 }

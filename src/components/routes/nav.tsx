@@ -4,7 +4,11 @@ import { GET_ITEMS } from "../../apollo/queries";
 import { IProduct } from "../../interfaces/product";
 import { addedItemsVar, selectedCurrencyVar } from "../../apollo/cache";
 import circleCartBtn from "../images/circleIcon.png";
-import { withApolloHooksHOC } from "../../functions/withApolloHooksHOC";
+import { NavLink } from "react-router-dom";
+import { routes } from "./routes";
+import { withHooksHoc } from "../../functions/withHooksHoc";
+import { useReactiveVar } from "@apollo/client";
+import { IAttribute } from "../../interfaces/attributes";
 
 interface NavProp {
   value: string;
@@ -54,19 +58,28 @@ class Nav extends React.Component<NavProp, IState> {
   //endregion
 
   //region onAdd
-  onAdd(value: string) {
+  onAdd(id: string, attrib: IAttribute[]) {
     let flag = true;
     let orderedProducts = [...addedItemsVar()];
 
     orderedProducts.forEach((f) => {
-      if (f.id === value) {
+      if (f.id === id) {
         f.quantity++;
         flag = false;
       }
     });
 
+    // console.log("id: ", id);
+    // console.log("attrib: ", attrib);
     if (flag) {
-      orderedProducts.push({ id: value, quantity: 1 });
+      // let b = attrib.map((a) => {
+      //   let af = { ...a };
+      //   af.items = a.items.filter((f, index) => index === 0);
+      //   return af;
+      // });
+
+      orderedProducts.push({ id: id, quantity: 1 });
+      // console.log("orderedProducts: ", orderedProducts);
     }
     addedItemsVar(orderedProducts);
   }
@@ -74,28 +87,36 @@ class Nav extends React.Component<NavProp, IState> {
 
   //region getItems()
   getItems() {
+    // console.log("this.props.value: ", this.props.value);
     GET_ITEMS(this.props.value).then((r) => {
-      console.log(r.data.category.products);
+      console.log("r.data.category.products: ", r.data.category.products);
       this.setState({ items: r.data.category.products });
     });
   }
   //endregion
 
+  //region Render
+
   render() {
+    // console.log("this.state.items: ", this.state.items);
     return (
       <div className="nav">
+        {/*region Category Name*/}
         <div className="categoryName">
           {capitalizeFirstLetter(this.props.value)}
         </div>
+        {/*endregion*/}
 
         <section className="goods">
           {this.state.items?.map((i) => {
+            // console.log("Product: ", i);
             return (
               <div
                 key={i.name}
                 className={i.inStock ? "" : "item-out-of-stock"}
               >
                 <div className="item">
+                  {/*region Out of stock*/}
                   <div className="image-out-item-container">
                     <img
                       className="item-image"
@@ -106,25 +127,33 @@ class Nav extends React.Component<NavProp, IState> {
                       <div className="out-of-stock-title">Out of stock</div>
                     )}
                   </div>
-
+                  {/*endregion*/}
+                  {/*region Button Add*/}
                   {i.inStock && (
                     <img
-                      onClick={() => this.onAdd(i.id)}
+                      onClick={() => this.onAdd(i.id, i.attributes)}
                       className="item-image-shop-cartBtn"
                       alt="order"
                       src={circleCartBtn}
                     />
                   )}
+                  {/*endregion*/}
 
-                  <div className="item-name">{i.name}</div>
-                  <div className="item-price">
-                    {this.state.currency}
-                    {
-                      i.prices.filter(
-                        (p) => p.currency.symbol === this.state.currency
-                      )[0]?.amount
-                    }
-                  </div>
+                  <NavLink
+                    to={`${routes.Description(this.props.value, i.id)}`}
+                    className="item-name"
+                  >
+                    <div>{i.name}</div>
+
+                    <div className="item-price">
+                      {this.state.currency}
+                      {
+                        i.prices.filter(
+                          (p) => p.currency.symbol === this.state.currency
+                        )[0]?.amount
+                      }
+                    </div>
+                  </NavLink>
                 </div>
               </div>
             );
@@ -133,7 +162,9 @@ class Nav extends React.Component<NavProp, IState> {
       </div>
     );
   }
+  //endregion
 }
 
-// export default withApolloHooksHOC(Nav, selectedCurrencyVar, "currency");
-export default withApolloHooksHOC(Nav, [selectedCurrencyVar], ["currency"]);
+export default withHooksHoc(Nav, [
+  { hook: useReactiveVar, name: selectedCurrencyVar, propName: "currency" },
+]);
