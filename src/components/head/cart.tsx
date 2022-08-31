@@ -172,7 +172,7 @@ class Cart extends React.Component<CartProp, CartState> {
                           product={p}
                           key={`${p.id}atr`}
                           orderedProducts={this.props.orderedProducts}
-                          // addSelectedAttributesFun={undefined}
+                          name={"Cart"}
                         />
                       </div>
                       {/*endregion  */}

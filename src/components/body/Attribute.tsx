@@ -8,6 +8,7 @@ interface AttributeProp {
   orderedProducts: IOrderedProducts | undefined;
   product: IProduct;
   styles: string[];
+  name: string;
 
   // addSelectedAttributesFun: Function | undefined;
 }
@@ -21,69 +22,55 @@ class Attribute extends React.Component<AttributeProp, AttrState> {
     selectedAttributes: [] as IAttribute[],
   };
 
-  componentDidMount() {
-    let prodId = this.props.product.id;
-    if (this.props.orderedProducts?.some((i) => i.id === prodId)) {
-      let attributes = this.props.orderedProducts?.filter(
-        (f) => f.id === prodId
-      )[0]?.attributes;
-      if (attributes) {
-        this.setState({ selectedAttributes: attributes });
-      }
-    }
-  }
-
-  // componentDidUpdate(prevProps, prevState) {
-  //   if (prevProps.orderedProducts !== this.props.orderedProducts) {
-  //     console.log("Changed: ");
-  //   }
-  //
-  //
-  //   console.log("prevProps.orderedProducts", prevProps.orderedProducts);
-  //   console.log("this.props.orderedProducts", this.props.orderedProducts);
-  // }
-
   //region AddSelectedAttributes
   addSelectedAttributes(atrName: string, value: string) {
-    let atr = [...this.state.selectedAttributes];
-    if (this.state.selectedAttributes.some((f) => f.name === atrName)) {
-      atr.forEach((a) => {
-        if (a.name === atrName) {
-          a.items.forEach((p) => {
-            if (p.value !== value) {
-              p.value = value;
+    if (this.props.name !== "Cart") {
+      let product = this.props.orderedProducts?.filter(
+        (p) => p.id === this.props.product.id
+      )[0];
+
+      if (product) {
+        let products = this.props.orderedProducts;
+        let prodId = this.props.product.id;
+        let selAttributes = this.state.selectedAttributes;
+        products?.forEach((p) => {
+          if (p.id === prodId) {
+            if (p.attributes && p.attributes.some((a) => a.name === atrName)) {
+              p.attributes?.forEach((a) => {
+                if (a.name === atrName) {
+                  a.items[0] = { value: value };
+                }
+                selAttributes.push(a);
+              });
+            } else {
+              selAttributes.push({ name: atrName, items: [{ value: value }] });
+              p.attributes = selAttributes;
             }
-          });
+          }
+        });
+        addedItemsVar(products);
+        this.setState({ selectedAttributes: selAttributes });
+      } else {
+        let selAtr = this.state.selectedAttributes;
+
+        selAtr?.forEach((a) => {
+          if (a.name === atrName) {
+            a.items[0].value = value;
+          }
+        });
+
+        if (!selAtr.some((p) => p.name === atrName)) {
+          selAtr.push({ name: atrName, items: [{ value: value }] });
         }
-      });
-    } else {
-      atr.push({ name: atrName, items: [{ value: value }] });
-    }
-    this.setState({ selectedAttributes: atr });
 
-    let items = this.props.orderedProducts;
-
-    if (items && items.some((i) => i.id === this.props.product.id)) {
-      items.forEach((i) => {
-        if (i.id === this.props.product.id) {
-          //if the same attribute exist
-          // if there is not such attribute
-          // atr.forEach(a=>{
-          //   if (i.attributes?.some(i=>i.name===a.name)){
-          //
-          //   }
-          // })
-          // i.attributes = atr;
-        }
-      });
-
-      addedItemsVar(items);
+        this.setState({ selectedAttributes: selAtr });
+      }
     }
   }
   //endregion
 
   //region checkSelectedAttribute
-  checkSelectedAttribute(atrName: string, value: string, index: number) {
+  checkSelectedAttribute(atrName: string, value: string) {
     let result = false;
     if (this.state.selectedAttributes.length === 0) {
       result = false;
@@ -122,33 +109,33 @@ class Attribute extends React.Component<AttributeProp, AttrState> {
           this.props.product.attributes.map((a, i) => {
             return (
               <span key={`${a.id}`}>
+                {/*region Attribute Name*/}
                 <div
                   className={`attribute-item-name ${this.props.styles[0]}`}
                   key={`${a.id}${a.name}`}
                 >
                   {a.name}:
                 </div>
-                {/*<div className={`item-group ${this.props.styles[1]}`}>*/}
+                {/*endregion*/}
+
                 <div className={`item-group`}>
-                  {a.items.map((i, index) => {
+                  {a.items.map((i) => {
                     //region attribute Color
                     if (a.name === "Color") {
                       return (
                         <div
                           key={i.value}
-                          className={`colorContainer ${
-                            this.checkSelectedAttribute(
-                              a.name,
-                              i.value,
-                              index
-                            ) && "selectedAttributeColor"
-                          }`}
-                          // selectedAttributeColor
+                          className={`colorContainer 
+                          ${this.props.styles[2]}
+                           ${
+                             this.checkSelectedAttribute(a.name, i.value) &&
+                             "selectedAttributeColor"
+                           }`}
                         >
                           <div
-                            onClick={() =>
-                              this.addSelectedAttributes(a.name, i.value)
-                            }
+                            onClick={() => {
+                              this.addSelectedAttributes(a.name, i.value);
+                            }}
                             className="color-box "
                             style={{
                               backgroundColor: `${i.value}`,
@@ -166,9 +153,10 @@ class Attribute extends React.Component<AttributeProp, AttrState> {
                         }
                         key={i.value}
                         className={`attribute-value ${this.props.styles[1]} ${
-                          this.checkSelectedAttribute(a.name, i.value, index) &&
+                          this.checkSelectedAttribute(a.name, i.value) &&
                           "selectedAttributeTxt"
                         }`}
+
                         // className={`"attribute-value" ${this.props.styles[1]}`}
                         // selectedAttributeTxt
                       >

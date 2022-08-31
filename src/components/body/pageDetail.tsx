@@ -32,6 +32,7 @@ class PageDetail extends React.Component<DetailProps, DetailState> {
   componentDidMount() {
     // console.log("Props111: ", this.props);
     this.getItem();
+    console.log("Page Details: CDM");
   }
   //endregion
 
@@ -45,8 +46,6 @@ class PageDetail extends React.Component<DetailProps, DetailState> {
     });
   }
   //endregion
-
-  getAttributes() {}
 
   addToCart() {}
 
@@ -85,7 +84,12 @@ class PageDetail extends React.Component<DetailProps, DetailState> {
             <Attribute
               orderedProducts={this.props.orderedProducts}
               product={this.state.selectedProduct}
-              styles={["priceTitle", "attributeItemValue"]}
+              styles={[
+                "priceTitle",
+                "attributeItemValue",
+                "attributeItemColor",
+              ]}
+              name={"PageDetail"}
             />
           </div>
           <div className="price">
