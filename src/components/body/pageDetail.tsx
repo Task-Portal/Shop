@@ -7,25 +7,26 @@ import { useParams } from "react-router-dom";
 import { GET_PRODUCT } from "../../apollo/queries";
 import Attribute from "./Attribute";
 import { IOrderedProducts } from "../../interfaces/orderedProducts";
+import { IAttribute } from "../../interfaces/attributes";
 
 interface DetailProps {
   id: string;
   currencySymbol: string;
   orderedProducts: IOrderedProducts;
-  selectProduct: IProduct;
+  // selectProduct: IProduct;
 }
 
 interface DetailState {
   selectedProduct: IProduct;
   selPhoto: string;
-  // selectedAttributes: IAttribute[];
+  selectedAttributes: IAttribute[];
 }
 
 class PageDetail extends React.Component<DetailProps, DetailState> {
   state = {
     selectedProduct: {} as IProduct,
     selPhoto: "",
-    // selectedAttributes: [],
+    selectedAttributes: [] as IAttribute[],
   };
 
   //region CDM
@@ -47,33 +48,59 @@ class PageDetail extends React.Component<DetailProps, DetailState> {
   }
   //endregion
 
-  addToCart() {}
+  getSelectedAttributes = (childData: IAttribute[]) => {
+    this.setState({ selectedAttributes: childData });
+  };
 
+  //region Add to Cart
+  addToCart() {
+    let id = this.state.selectedProduct.id;
+    let flag = true;
+    let orderedProducts = [...addedItemsVar()];
+
+    orderedProducts.forEach((f) => {
+      if (f.id === id) {
+        f.quantity++;
+        f.attributes = this.state.selectedAttributes;
+        flag = false;
+      }
+    });
+
+    if (flag) {
+      orderedProducts.push({
+        id: id,
+        quantity: 1,
+        attributes: this.state.selectedAttributes,
+      });
+    }
+    addedItemsVar(orderedProducts);
+  }
+  //endregion
+
+  //region Render
   render() {
-    console.log("State: ", this.state.selectedProduct);
-
     return (
       <div className="pageDetailContainer">
         {/*region Photos*/}
-        {/*<div className="collectionPhotos">*/}
-        {/*  {this.state.selectedProduct &&*/}
-        {/*    this.state.selectedProduct.gallery?.map((p, i) => {*/}
-        {/*      return (*/}
-        {/*        <img*/}
-        {/*          className="miniPhoto"*/}
-        {/*          src={p}*/}
-        {/*          alt=""*/}
-        {/*          onClick={() => this.setState({ selPhoto: p })}*/}
-        {/*          key={p}*/}
-        {/*        />*/}
-        {/*      );*/}
-        {/*    })}*/}
-        {/*</div>*/}
+        <div className="collectionPhotos">
+          {this.state.selectedProduct &&
+            this.state.selectedProduct.gallery?.map((p, i) => {
+              return (
+                <img
+                  className="miniPhoto"
+                  src={p}
+                  alt=""
+                  onClick={() => this.setState({ selPhoto: p })}
+                  key={p}
+                />
+              );
+            })}
+        </div>
         {/*endregion*/}
         {/*region Main Photo*/}
-        {/*<div className="mainPhoto">*/}
-        {/*  <img className="mainPhotoImg" src={this.state.selPhoto} alt="" />*/}
-        {/*</div>*/}
+        <div className="mainPhoto">
+          <img className="mainPhotoImg" src={this.state.selPhoto} alt="" />
+        </div>
         {/*endregion*/}
         <div className="info">
           {/*region Brand Title*/}
@@ -90,6 +117,8 @@ class PageDetail extends React.Component<DetailProps, DetailState> {
                 "attributeItemColor",
               ]}
               name={"PageDetail"}
+              selectedAttributes={this.state.selectedAttributes}
+              gettingAttributes={this.getSelectedAttributes}
             />
           </div>
           <div className="price">
@@ -121,6 +150,7 @@ class PageDetail extends React.Component<DetailProps, DetailState> {
       </div>
     );
   }
+  //  endregion
 }
 
 export default withHooksHoc(PageDetail, [

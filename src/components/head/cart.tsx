@@ -97,6 +97,14 @@ class Cart extends React.Component<CartProp, CartState> {
   }
   //endregion
 
+  getAttributes = (products: IOrderedProducts, id: string) => {
+    let atr = products.filter((p) => p.id === id)[0]?.attributes;
+    if (atr === undefined) {
+      return [];
+    }
+    return atr;
+  };
+
   //region Render
   render() {
     return (
@@ -173,6 +181,11 @@ class Cart extends React.Component<CartProp, CartState> {
                           key={`${p.id}atr`}
                           orderedProducts={this.props.orderedProducts}
                           name={"Cart"}
+                          gettingAttributes={undefined}
+                          selectedAttributes={this.getAttributes(
+                            this.props.orderedProducts,
+                            p.id
+                          )}
                         />
                       </div>
                       {/*endregion  */}

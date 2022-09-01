@@ -58,7 +58,7 @@ class Nav extends React.Component<NavProp, IState> {
   //endregion
 
   //region onAdd
-  onAdd(id: string, attrib: IAttribute[]) {
+  onAdd(id: string) {
     let flag = true;
     let orderedProducts = [...addedItemsVar()];
 
@@ -69,17 +69,8 @@ class Nav extends React.Component<NavProp, IState> {
       }
     });
 
-    // console.log("id: ", id);
-    // console.log("attrib: ", attrib);
     if (flag) {
-      // let b = attrib.map((a) => {
-      //   let af = { ...a };
-      //   af.items = a.items.filter((f, index) => index === 0);
-      //   return af;
-      // });
-
       orderedProducts.push({ id: id, quantity: 1 });
-      // console.log("orderedProducts: ", orderedProducts);
     }
     addedItemsVar(orderedProducts);
   }
@@ -131,7 +122,7 @@ class Nav extends React.Component<NavProp, IState> {
                   {/*region Button Add*/}
                   {i.inStock && (
                     <img
-                      onClick={() => this.onAdd(i.id, i.attributes)}
+                      onClick={() => this.onAdd(i.id)}
                       className="item-image-shop-cartBtn"
                       alt="order"
                       src={circleCartBtn}

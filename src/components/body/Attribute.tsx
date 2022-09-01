@@ -9,19 +9,11 @@ interface AttributeProp {
   product: IProduct;
   styles: string[];
   name: string;
-
-  // addSelectedAttributesFun: Function | undefined;
-}
-
-interface AttrState {
   selectedAttributes: IAttribute[];
+  gettingAttributes: Function | undefined;
 }
 
-class Attribute extends React.Component<AttributeProp, AttrState> {
-  state = {
-    selectedAttributes: [] as IAttribute[],
-  };
-
+class Attribute extends React.Component<AttributeProp> {
   //region AddSelectedAttributes
   addSelectedAttributes(atrName: string, value: string) {
     if (this.props.name !== "Cart") {
@@ -32,7 +24,7 @@ class Attribute extends React.Component<AttributeProp, AttrState> {
       if (product) {
         let products = this.props.orderedProducts;
         let prodId = this.props.product.id;
-        let selAttributes = this.state.selectedAttributes;
+        let selAttributes = this.props.selectedAttributes;
         products?.forEach((p) => {
           if (p.id === prodId) {
             if (p.attributes && p.attributes.some((a) => a.name === atrName)) {
@@ -51,7 +43,7 @@ class Attribute extends React.Component<AttributeProp, AttrState> {
         addedItemsVar(products);
         this.setState({ selectedAttributes: selAttributes });
       } else {
-        let selAtr = this.state.selectedAttributes;
+        let selAtr = this.props.selectedAttributes;
 
         selAtr?.forEach((a) => {
           if (a.name === atrName) {
@@ -63,7 +55,9 @@ class Attribute extends React.Component<AttributeProp, AttrState> {
           selAtr.push({ name: atrName, items: [{ value: value }] });
         }
 
-        this.setState({ selectedAttributes: selAtr });
+        // this.setState({ selectedAttributes: selAtr });
+        if (this.props.gettingAttributes !== undefined)
+          this.props.gettingAttributes(selAtr);
       }
     }
   }
@@ -72,10 +66,10 @@ class Attribute extends React.Component<AttributeProp, AttrState> {
   //region checkSelectedAttribute
   checkSelectedAttribute(atrName: string, value: string) {
     let result = false;
-    if (this.state.selectedAttributes.length === 0) {
+    if (this.props.selectedAttributes.length === 0) {
       result = false;
     } else {
-      this.state.selectedAttributes.forEach((p) => {
+      this.props.selectedAttributes.forEach((p) => {
         if (p.name === atrName) {
           p.items.forEach((v) => {
             if (v.value === value) result = true;
